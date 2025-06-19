@@ -1,0 +1,41 @@
+services:
+  api:
+    image: oven/bun
+    container_name: isebo-api
+    working_dir: /app/isebo
+    volumes:
+      - ./api:/app/isebo
+    ports:
+      - 8000:8000
+    networks:
+      - default
+    command: bun dev
+
+  db:
+    image: postgres
+    container_name: isebo-db
+    shm_size: 128mb
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: isebo
+      POSTGRES_PASSWORD: isebo_pass
+      POSTGRES_DB: isebo_db
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+    networks:
+      - default
+
+  adminer:
+    image: adminer
+    container_name: isebo-adminer
+    restart: always
+    ports:
+      - 8085:8080
+    networks:
+      - default
+
+networks:
+  default:
+    name: isebo-network
